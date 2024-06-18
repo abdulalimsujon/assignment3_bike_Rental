@@ -3,12 +3,6 @@ import { Tuser } from './user.interface';
 import { User } from './user.model';
 import bcrypt from 'bcrypt';
 
-const createUserIntoDb = async (payload: Tuser) => {
-  const result = await User.create(payload);
-
-  return result;
-};
-
 const getMe = async (id: string) => {
   const result = await User.findOne({ _id: id });
   return result;
@@ -32,7 +26,7 @@ const updateProfileIntoDb = async (_id: string, payload: Partial<Tuser>) => {
 };
 
 export const userServices = {
-  createUserIntoDb,
   getMe,
+
   updateProfileIntoDb,
 };

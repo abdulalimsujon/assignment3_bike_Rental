@@ -12,8 +12,10 @@ const getAllbike = async () => {
   return result;
 };
 
-const deleteBike = async (id: string) => {
-  const result = await Bike.findByIdAndDelete(id);
+const deleteBike = async (_id: string) => {
+  const result = await Bike.findByIdAndDelete(_id, {
+    new: true,
+  });
   return result;
 };
 

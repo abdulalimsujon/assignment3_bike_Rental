@@ -11,6 +11,7 @@ router.post(
   validataRequest(bikeValidation.createBikeSchema),
   bikeController.createBike,
 );
+router.delete('/:id', Auth('admin'), bikeController.deleteBike);
 router.put(
   '/:id',
   Auth('admin'),

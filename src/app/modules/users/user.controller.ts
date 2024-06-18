@@ -18,6 +18,7 @@ const getMe = catchAsync(async (req, res) => {
 const updateProfile = catchAsync(async (req, res) => {
   const id = req.user.userId;
   const reqbody = req.body;
+
   const result = await userServices.updateProfileIntoDb(id, reqbody);
   sendResponse(res, {
     success: true,
