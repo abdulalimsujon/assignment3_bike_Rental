@@ -11,8 +11,6 @@ import handleZodError from '../Error/handleZodError';
 import handleValidationError from '../Error/handleValidationError';
 import handleCastError from '../Error/handleCastError';
 import handleDublicateKeyError from '../Error/handleDublicateKeyError';
-import config from '../config';
-import httpStatus from 'http-status';
 
 const globalErrorHandler: ErrorRequestHandler = (error, req, res, next) => {
   let statusCode = 500;
