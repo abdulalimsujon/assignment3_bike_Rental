@@ -1,8 +1,8 @@
-export type Bike = {
+export type Tbike = {
   name: string;
   description: string;
   pricePerHour: number;
-  isAvailable?: boolean; // Optional with default true
+  isAvailable?: boolean;
   cc: number;
   year: number;
   model: string;

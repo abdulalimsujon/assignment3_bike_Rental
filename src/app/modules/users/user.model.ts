@@ -9,7 +9,6 @@ const userSchema = new Schema<Tuser>(
     name: {
       type: String,
       required: true,
-      unique: true,
     },
     email: {
       type: String,

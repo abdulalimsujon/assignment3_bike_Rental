@@ -6,10 +6,14 @@ import {
 } from '../interface/TerrorResources';
 
 const handleDublicateKeyError = (error: any): TgenericRerrorResponse => {
+  const cleanedMessage = error?.errorResponse?.errmsg.replace(
+    /Car_Rental\.users index:\s*/,
+    '',
+  );
   const errorSources: TErrorSources = [
     {
       path: error?.keyValue,
-      message: 'Duplicate keyError',
+      message: cleanedMessage,
     },
   ];
 
@@ -17,7 +21,7 @@ const handleDublicateKeyError = (error: any): TgenericRerrorResponse => {
 
   return {
     statusCode,
-    message: 'validation error',
+    message: cleanedMessage,
     errorSources,
   };
 };

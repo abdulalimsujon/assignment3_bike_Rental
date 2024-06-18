@@ -12,6 +12,7 @@ import handleValidationError from '../Error/handleValidationError';
 import handleCastError from '../Error/handleCastError';
 import handleDublicateKeyError from '../Error/handleDublicateKeyError';
 import config from '../config';
+import httpStatus from 'http-status';
 
 const globalErrorHandler: ErrorRequestHandler = (error, req, res, next) => {
   let statusCode = 500;
@@ -68,8 +69,9 @@ const globalErrorHandler: ErrorRequestHandler = (error, req, res, next) => {
     success: false,
     message,
     // error,
+
     errorSources,
-    stack: config.NODE_ENV === 'development' ? error.stack : null,
+    // stack: config.NODE_ENV === 'development' ? error.stack : null,
   });
 };
 

@@ -30,11 +30,15 @@ const Auth = (...RequireRules: TuserRole[]) => {
     const user = await User.findOne({ _id: userId });
 
     if (!user) {
-      throw new AppError(httpStatus.NOT_FOUND, 'this user is not found');
+      throw new Error('You have no access to this route');
     }
 
     if (RequireRules && !RequireRules.includes(role)) {
-      throw new AppError(httpStatus.UNAUTHORIZED, 'you are not authorize');
+      res.status(401).send({
+        success: false,
+        statusCode: 401,
+        message: 'You have no access to this route',
+      });
     }
 
     next();
