@@ -4,7 +4,8 @@ import { Tuser, Tuserlogin } from '../users/user.interface';
 import { User } from '../users/user.model';
 
 import config from '../../config';
-import { comparePasswords, createToken } from './auth.utils';
+import { createToken } from './auth.utils';
+import { comparePasswords } from '../../utilities/comparePassword';
 
 const createUserIntoDb = async (payload: Tuser) => {
   const result = await User.create(payload);

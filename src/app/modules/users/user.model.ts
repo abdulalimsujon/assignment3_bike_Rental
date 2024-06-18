@@ -34,6 +34,7 @@ const userSchema = new Schema<Tuser>(
   },
   {
     timestamps: true,
+    versionKey: false,
   },
 );
 
