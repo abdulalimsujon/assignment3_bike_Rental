@@ -55,7 +55,7 @@ const returnBike = async (rentalId: string, userId: string) => {
     userId: userId,
     bikeId: rentalInfo?.bikeId,
     startTime: rentalInfo?.startTime,
-    returnTime: rentalInfo?.returnTime,
+    returnTime: new Date(Date.now()).toISOString(),
     totalCost: cost,
     isReturned: true,
   };
@@ -63,6 +63,11 @@ const returnBike = async (rentalId: string, userId: string) => {
   const result = await Rental.findOneAndUpdate({ _id: rentalId }, data, {
     new: true,
   });
+
+  await Bike.findOneAndUpdate(
+    { _id: rentalInfo?.bikeId },
+    { isAvailable: true },
+  );
 
   return result;
 };

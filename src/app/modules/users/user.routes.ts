@@ -7,11 +7,11 @@ import { uservalidation } from './user.validation';
 
 const router = express.Router();
 
-router.get('/me', Auth('user'), userController.getMe);
+router.get('/me', Auth('user', 'admin'), userController.getMe);
 
 router.put(
   '/me',
-  Auth('user'),
+  Auth('user', 'admin'),
   validataRequest(uservalidation.updateUserValidation),
   userController.updateProfile,
 );
