@@ -30,7 +30,20 @@ const returnBike = catchAsync(async (req, res) => {
   });
 });
 
+const getAllRentalById = catchAsync(async (req, res) => {
+  const userId = req.user.userId;
+  const result = await rentalService.getAllRentals(userId);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Rentals retrieved successfully',
+    data: result,
+  });
+});
+
 export const rentalController = {
   createRental,
   returnBike,
+  getAllRentalById,
 };
