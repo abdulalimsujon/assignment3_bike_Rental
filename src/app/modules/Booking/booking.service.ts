@@ -4,7 +4,7 @@ import { Bike } from '../Bike/bike.model';
 import Trental from './booking.interface';
 import { Rental } from './booking.model';
 import { startSession } from 'mongoose';
-import { User } from '../users/user.model';
+import calculateRentalCost from '../../utilities/getDuaration';
 
 const createRentalIntoDb = async (payload: Trental) => {
   const isBikeExists = await Bike.findOne({
@@ -41,18 +41,30 @@ const createRentalIntoDb = async (payload: Trental) => {
   }
 };
 
-const returnBike = async (rentalId: string) => {
+const returnBike = async (rentalId: string, userId: string) => {
   const rentalInfo = await Rental.findOne({ _id: rentalId });
+  const bikeInfo = await Bike.findOne({ _id: rentalInfo?.bikeId });
+  const start = new Date(rentalInfo?.startTime as Date).toISOString();
+  const end = new Date(rentalInfo?.returnTime as Date).toISOString();
+
+  const perHourCost = bikeInfo?.pricePerHour;
+  const cost = calculateRentalCost(start, end, perHourCost as number);
 
   const data = {
     _id: rentalId,
-    userId: rentalInfo?.userId,
+    userId: userId,
     bikeId: rentalInfo?.bikeId,
     startTime: rentalInfo?.startTime,
-    returnTime: new Date(Date.now()).toISOString(),
+    returnTime: rentalInfo?.returnTime,
+    totalCost: cost,
+    isReturned: true,
   };
 
-  return data;
+  const result = await Rental.findOneAndUpdate({ _id: rentalId }, data, {
+    new: true,
+  });
+
+  return result;
 };
 
 export const rentalService = {
