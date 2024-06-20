@@ -13,6 +13,11 @@ const getAllbike = async () => {
 };
 
 const deleteBike = async (_id: string) => {
+  const isBikeExists = await Bike.findById(_id);
+
+  if (!isBikeExists) {
+    throw new Error('this is not valid bike id');
+  }
   const result = await Bike.findByIdAndDelete(_id, {
     new: true,
   });
@@ -20,6 +25,11 @@ const deleteBike = async (_id: string) => {
 };
 
 const updateBike = async (_id: string, payload: Partial<Tbike>) => {
+  const isBikeExists = await Bike.findById(_id);
+
+  if (!isBikeExists) {
+    throw new Error('this is not valid bike id');
+  }
   const result = await Bike.findByIdAndUpdate(_id, payload, {
     new: true,
     runValidators: true,

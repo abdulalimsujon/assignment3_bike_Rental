@@ -6,6 +6,9 @@ import sendResponse from '../../utilities/sendResponse';
 const createRental = catchAsync(async (req, res) => {
   const payload = req.body;
 
+  const userId = req?.user?.userId;
+  payload.userId = userId;
+
   const result = await rentalService.createRentalIntoDb(payload);
 
   sendResponse(res, {
