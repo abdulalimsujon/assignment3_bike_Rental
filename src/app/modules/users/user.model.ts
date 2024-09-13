@@ -26,8 +26,10 @@ const userSchema = new Schema<Tuser>(
     },
     phone: String,
     address: String,
+    image: String,
     role: {
       type: String,
+      default: 'user',
       enum: ['user', 'admin'],
     },
   },

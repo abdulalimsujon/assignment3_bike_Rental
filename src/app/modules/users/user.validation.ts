@@ -9,7 +9,6 @@ const createUserValidation = z.object({
       .max(20, { message: 'password can not more than 20characters' }),
     address: z.string({ required_error: 'please give the address' }),
     phone: z.string({ required_error: 'please give the phone' }),
-    role: z.enum(['user', 'admin']),
   }),
 });
 const updateUserValidation = z.object({

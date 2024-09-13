@@ -4,17 +4,34 @@ import { Tuser, Tuserlogin } from '../users/user.interface';
 import { User } from '../users/user.model';
 
 import config from '../../config';
-import { createToken } from './auth.utils';
+import { createToken, TtokenPayload } from './auth.utils';
 import { comparePasswords } from '../../utilities/comparePassword';
+import { sendImageToCloudinary } from '../../utilities/sendImageToCloudinary';
+import { Express } from 'express';
 
-const createUserIntoDb = async (payload: Tuser) => {
-  const result = await User.create(payload);
+const createUserIntoDb = async (
+  data: Tuser,
+  file: Express.Multer.File & { path?: string },
+) => {
+  if (file) {
+    const imageName = `${Math.floor(100 + Math.random() * 900)}`;
+    const path = file?.path;
+    const { secure_url } = (await sendImageToCloudinary(imageName, path)) as {
+      secure_url: string;
+    };
+
+    if (secure_url) {
+      data.image = secure_url as string;
+    }
+  }
+
+  const result = await User.create(data);
 
   return result;
 };
 
-const userLogin = async (payload: Tuserlogin) => {
-  const userData = await User.findOne({ email: payload?.email }).select(
+const userLogin = async (data: Tuserlogin) => {
+  const userData = await User.findOne({ email: data?.email }).select(
     '+password',
   );
   if (!userData) {
@@ -22,24 +39,31 @@ const userLogin = async (payload: Tuserlogin) => {
   }
 
   const isPasswordMatched = await comparePasswords(
-    payload.password,
+    data.password,
     userData.password,
   );
 
   if (!isPasswordMatched) {
     throw new Error('The password doest matched');
   }
-
   const userId = userData._id.toString();
+  const payload = { userId, role: userData.role };
+
   const token = createToken(
-    { userId, role: userData.role },
+    payload as TtokenPayload,
+    config.create_token_secrate as string,
+    config.expires_token_time as string,
+  );
+  const refreshToken = createToken(
+    payload as TtokenPayload,
     config.create_token_secrate as string,
     config.expires_token_time as string,
   );
 
   return {
+    refreshToken,
     token,
-    userData,
+    payload,
   };
 };
 

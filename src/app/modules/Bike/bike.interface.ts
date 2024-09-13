@@ -7,4 +7,5 @@ export type Tbike = {
   year: number;
   model: string;
   brand: string;
+  image: string;
 };

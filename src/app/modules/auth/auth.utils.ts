@@ -1,12 +1,12 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import Jwt, { JwtPayload } from 'jsonwebtoken';
-import bcrypt from 'bcrypt';
 import config from '../../config';
-import AppError from '../../Error/appError';
+
+export type TtokenPayload = { userId: string; role: string };
 
 export const createToken = (
-  JwtPayload: { userId: string; role: string },
+  JwtPayload: TtokenPayload,
   secreate: string,
   expiresIn: string,
 ) => {

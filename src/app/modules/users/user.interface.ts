@@ -6,7 +6,8 @@ export type Tuser = {
   phone: string;
   password: string;
   address: string;
-  role: string;
+  role?: string;
+  image: string;
   createdAt?: string;
   updatedAt?: string;
 };
