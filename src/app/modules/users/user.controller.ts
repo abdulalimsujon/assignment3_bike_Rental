@@ -28,7 +28,45 @@ const updateProfile = catchAsync(async (req, res) => {
   });
 });
 
+const getAllUser = catchAsync(async (req, res) => {
+  const result = await userServices.getAlluserFromDb();
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'All user retrived successfully',
+    data: result,
+  });
+});
+
+const deleteUser = catchAsync(async (req, res) => {
+  const userId = req.params.userId;
+  const result = await userServices.deleteUserIntoDb(userId);
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'user is deleted successdully',
+    data: result,
+  });
+});
+
+const ChangeUserRole = catchAsync(async (req, res) => {
+  const userId = req.params.userId;
+  const role = req.body.role;
+
+  const result = await userServices.changeUserRoleIntoDb(userId, role);
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'user is deleted successdully',
+    data: result,
+  });
+});
+
 export const userController = {
   getMe,
   updateProfile,
+  getAllUser,
+  deleteUser,
+  ChangeUserRole,
 };

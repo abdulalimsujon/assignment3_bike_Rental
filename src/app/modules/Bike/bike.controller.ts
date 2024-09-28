@@ -7,8 +7,7 @@ import { Express } from 'express';
 const createBike = catchAsync(async (req, res) => {
   const data = req.body;
   const file = req.file;
-  console.log('1', data);
-  console.log('2', file);
+
   const result = await bikeService.createBikeIntoDb(
     data,
     file as Express.Multer.File,
@@ -46,9 +45,11 @@ const getAllBike = catchAsync(async (req, res) => {
 });
 
 const updateBike = catchAsync(async (req, res) => {
-  const id = req.params.id;
+  const id = req.params.bikeId;
   const reqBody = req.body;
-  const result = await bikeService.updateBike(id, reqBody);
+  const file = req.file as Express.Multer.File;
+
+  const result = await bikeService.updateBike({ id, data: reqBody, file });
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
@@ -58,8 +59,7 @@ const updateBike = catchAsync(async (req, res) => {
 });
 
 const deleteBike = catchAsync(async (req, res) => {
-  const _id = req.params.id;
-
+  const _id = req.params.bikeId;
   const result = await bikeService.deleteBike(_id);
   sendResponse(res, {
     success: true,
@@ -81,6 +81,17 @@ const getSingleBike = catchAsync(async (req, res) => {
   });
 });
 
+const getAvailableBike = catchAsync(async (req, res) => {
+  const result = await bikeService.getAvailableBikeFromDb();
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'available bike is retrieved successfully',
+    data: result,
+  });
+});
+
 export const bikeController = {
   createBike,
   updateBike,
@@ -88,4 +99,5 @@ export const bikeController = {
   getAllBike,
   getSingleBike,
   deleteBike,
+  getAvailableBike,
 };

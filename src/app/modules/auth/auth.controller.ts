@@ -26,7 +26,7 @@ const userLogin = catchAsync(async (req, res) => {
   const payload = req.body;
 
   const result = await userServices.userLogin(payload);
-  res.cookie('refreshToken', result.refreshToken, {
+  res.cookie('refreshToken', result?.refreshToken, {
     secure: config.NODE_ENV === 'production',
     httpOnly: true,
     sameSite: 'none',

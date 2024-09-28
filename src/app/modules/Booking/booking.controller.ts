@@ -4,12 +4,15 @@ import { rentalService } from './booking.service';
 import sendResponse from '../../utilities/sendResponse';
 
 const createRental = catchAsync(async (req, res) => {
-  const payload = req.body;
+  const payload = req.body?.payload;
+  const price = req.body.price;
+  const userId = req.body.userId;
 
-  const userId = req?.user?.userId;
-  payload.userId = userId;
-
-  const result = await rentalService.createRentalIntoDb(payload);
+  const result = await rentalService.createRentalWithPayment(
+    payload[0],
+    price,
+    userId,
+  );
 
   sendResponse(res, {
     success: true,
@@ -20,10 +23,8 @@ const createRental = catchAsync(async (req, res) => {
 });
 
 const returnBike = catchAsync(async (req, res) => {
-  const rentalId = req.params.id;
-  const userId = req?.user?.userId;
-
-  const result = await rentalService.returnBike(rentalId, userId);
+  const reqBody = req.body;
+  const result = await rentalService.returnBike(reqBody);
 
   sendResponse(res, {
     success: true,
@@ -33,9 +34,20 @@ const returnBike = catchAsync(async (req, res) => {
   });
 });
 
-const getAllRentalById = catchAsync(async (req, res) => {
-  const userId = req.user.userId;
-  const result = await rentalService.getAllRentals(userId);
+const getAllRental = catchAsync(async (req, res) => {
+  const result = await rentalService.getAllRentals();
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Rentals retrieved successfully',
+    data: result,
+  });
+});
+
+const getRentalByuserId = catchAsync(async (req, res) => {
+  const userId = req.params.userId;
+  const result = await rentalService.getRentalByuserId(userId);
 
   sendResponse(res, {
     success: true,
@@ -48,5 +60,6 @@ const getAllRentalById = catchAsync(async (req, res) => {
 export const rentalController = {
   createRental,
   returnBike,
-  getAllRentalById,
+  getAllRental,
+  getRentalByuserId,
 };

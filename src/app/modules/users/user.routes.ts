@@ -8,6 +8,13 @@ import { uservalidation } from './user.validation';
 const router = express.Router();
 
 router.get('/me', Auth('user', 'admin'), userController.getMe);
+router.get('/all-user', Auth('admin'), userController.getAllUser);
+router.delete('/delete-user/:userId', Auth('admin'), userController.deleteUser);
+router.put(
+  '/update-role/:userId',
+  Auth('admin'),
+  userController.ChangeUserRole,
+);
 
 router.put(
   '/me',

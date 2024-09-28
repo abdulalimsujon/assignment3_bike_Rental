@@ -9,13 +9,18 @@ const createBikeIntoDb = async (
   file: Express.Multer.File & { path?: string },
 ) => {
   const imageName = `${Math.floor(100 + Math.random() * 900)}`;
-  const path = file?.path;
-  const { secure_url } = (await sendImageToCloudinary(imageName, path)) as {
-    secure_url: string;
-  };
 
-  if (secure_url) {
-    data.image = secure_url as string;
+  const path = file?.path;
+  if (path) {
+    const { secure_url } = (await sendImageToCloudinary(imageName, path)) as {
+      secure_url: string;
+    };
+
+    if (secure_url) {
+      data.image = secure_url as string;
+    } else {
+      data.image = 'no image';
+    }
   }
 
   const result = await Bike.create(data);
@@ -37,31 +42,66 @@ const getBikeQuery = async (query: Record<string, unknown>) => {
 };
 
 const deleteBike = async (_id: string) => {
-  const isBikeExists = await Bike.findById(_id);
+  console.log(_id);
+  const isBikeExists = await Bike.findOne({ _id: _id });
 
   if (!isBikeExists) {
     throw new Error('this is not valid bike id');
   }
-  const result = await Bike.findByIdAndDelete(_id, {
-    new: true,
-  });
+  const result = await Bike.findByIdAndDelete(
+    { _id: _id },
+    {
+      new: true,
+    },
+  );
   return result;
 };
 const getSingleBikeFromDb = async (id: string) => {
-  console.log('i am here', id);
   const result = await Bike.findById(id);
   return result;
 };
 
-const updateBike = async (_id: string, payload: Partial<Tbike>) => {
-  const isBikeExists = await Bike.findById({ _id: _id });
+const updateBike = async ({
+  id,
+  data,
+  file,
+}: {
+  id: string;
+  data: Tbike;
+  file: Express.Multer.File & { path?: string };
+}) => {
+  const isBikeExists = await Bike.findById({ _id: id });
 
   if (!isBikeExists) {
-    throw new Error('this is not valid bike id');
+    throw new Error('This is not a valid bike ID');
   }
-  const result = await Bike.findByIdAndUpdate(_id, payload, {
+
+  if (file) {
+    const imageName = `${Math.floor(100 + Math.random() * 900)}`;
+    const path = file?.path;
+    const { secure_url } = (await sendImageToCloudinary(imageName, path)) as {
+      secure_url: string;
+    };
+
+    if (secure_url) {
+      data.image = secure_url; // Update with the new uploaded image
+    }
+  } else if (!data.image) {
+    // If no file and data.image is missing, retain the existing image
+    data.image = isBikeExists.image;
+  }
+
+  const result = await Bike.findByIdAndUpdate({ _id: id }, data, {
     new: true,
     runValidators: true,
+  });
+
+  return result;
+};
+
+const getAvailableBikeFromDb = async () => {
+  const result = await Bike.find({
+    isAvailable: true,
   });
 
   return result;
@@ -74,4 +114,5 @@ export const bikeService = {
   updateBike,
   getBikeQuery,
   getSingleBikeFromDb,
+  getAvailableBikeFromDb,
 };

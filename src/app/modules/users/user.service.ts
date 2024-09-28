@@ -25,8 +25,25 @@ const updateProfileIntoDb = async (_id: string, payload: Partial<Tuser>) => {
   return result;
 };
 
+const deleteUserIntoDb = async (_id: string) => {
+  const result = await User.findByIdAndDelete(_id);
+  return result;
+};
+
+const getAlluserFromDb = async () => {
+  const result = await User.find({});
+  return result;
+};
+
+const changeUserRoleIntoDb = async (_id: string, role: string) => {
+  const result = await User.findByIdAndUpdate(_id, { role });
+  return result;
+};
+
 export const userServices = {
   getMe,
-
+  getAlluserFromDb,
   updateProfileIntoDb,
+  deleteUserIntoDb,
+  changeUserRoleIntoDb,
 };

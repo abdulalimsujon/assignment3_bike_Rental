@@ -51,12 +51,36 @@ router.delete('/:bikeId', Auth('admin'), bikeController.deleteBike);
 
 router.put(
   '/:bikeId',
+  upload.single('image'),
+  (
+    req: Request<Record<string, never>, Record<string, never>, BikeRequestBody>,
+    res: Response,
+    next: NextFunction,
+  ) => {
+    const { brand, pricePerHour, name, cc, description, year, model } =
+      req.body;
+
+    // Convert numerical fields to numbers
+    req.body = {
+      brand,
+      pricePerHour: Number(pricePerHour),
+      name,
+      cc: Number(cc),
+      description,
+      year: Number(year),
+      model,
+    };
+
+    next();
+  },
   Auth('admin'),
   validateRequest(bikeValidation.updateBikeSchema),
   bikeController.updateBike,
 );
 
 router.get('/getBike', bikeController.getAllBikeQuery);
+
+router.get('/available-bike', bikeController.getAvailableBike);
 
 router.get('/single-bike/:bikeId', bikeController.getSingleBike);
 

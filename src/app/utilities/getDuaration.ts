@@ -16,12 +16,14 @@ function calculateRentalCost(
     throw new Error('Invalid date');
   }
 
-  const diffMs = returnDate.getTime() - startDate.getTime();
-  const diffHours = diffMs / (1000 * 60 * 60); // Convert milliseconds to hours
+  const diffMs = startDate.getTime() - returnDate.getTime();
 
+  const diffHours = diffMs / (1000 * 60 * 60); // Convert milliseconds to hours
   const totalCost = diffHours * pricePerHour;
 
-  return totalCost;
+  const roundedTotalCost =
+    totalCost % 1 > 0.5 ? Math.ceil(totalCost) : Math.floor(totalCost);
+  return roundedTotalCost;
 }
 
 export default calculateRentalCost;
