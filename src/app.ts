@@ -3,17 +3,23 @@ import cors from 'cors';
 import router from './app/routes';
 import notFound from './app/middleware/notFound';
 import globalErrorHandler from './app/middleware/globalErrorHandler';
-import cookieParser from "cookie-parser";
+import cookieParser from 'cookie-parser';
 
 const app = express();
 
 // Middleware
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors({
-  origin: ['http://localhost:5173'],
-  credentials: true,
-}));
+app.use(
+  cors({
+    origin: [
+      'https://your-netlify-domain.netlify.app',
+      'http://localhost:3000',
+      'http://localhost:5173',
+    ],
+    credentials: true,
+  }),
+);
 
 // Routes
 app.use('/api', router);
