@@ -12,12 +12,8 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: [
-      'https://your-netlify-domain.netlify.app',
-      'http://localhost:3000',
-      'http://localhost:5173',
-    ],
-    credentials: true,
+    origin: true, // Allows requests from any origin
+    credentials: true, // Allow cookies and credentials
   }),
 );
 
